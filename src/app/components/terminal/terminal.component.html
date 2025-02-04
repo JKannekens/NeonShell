@@ -1,11 +1,25 @@
 <div class="terminal">
-  <div class="screw1 screws"></div>
-  <div class="screw2 screws"></div>
-  <div class="screw3 screws"></div>
-  <div class="screw4 screws"></div>
+  <div class="terminal-monitor">
+    <div class="screw1 screws"></div>
+    <div class="screw2 screws"></div>
+    <div class="screw3 screws"></div>
+    <div class="screw4 screws"></div>
 
-  <div class="terminal-screen">
-    WELCOME TO ROBCO INDUSTRIES (TM)
-    <span>Initializing Pip-Boy 3000...</span>
+    <div class="terminal-screen-wrapper">
+      <div class="terminal-screen">
+        <div class="terminal-lines"></div>
+        <div class="terminal-input">
+          <textarea
+            spellcheck="false"
+            [(ngModel)]="currentInput"
+            (keydown.enter)="executeCommand()"
+            autofocus
+          >
+          </textarea>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <div class="terminal-bottom-panel"></div>
 </div>

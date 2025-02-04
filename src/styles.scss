@@ -1,5 +1,4 @@
 /* You can add global styles to this file, and also import other style files */
-@import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
 
 html,
 body {
@@ -12,15 +11,11 @@ body {
   box-sizing: border-box;
 }
 
-$green-glow: #33ff33;
+$green-glow: #18ff62;
 $background-dark: #080d07;
 
 body {
   background-color: $background-dark;
-  color: $green-glow;
-  font-family: "VT323", monospace;
-  font-size: 20px;
-  text-shadow: 0 0 5px $green-glow, 0 0 10px $green-glow;
   display: flex;
   justify-content: center;
   align-items: center;
