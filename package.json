@@ -4,10 +4,10 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --output-path docs --base-href /NeonShell/",
+    "build": "ng build --base-href /NeonShell/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "deploy": "ng deploy --base-href=https://github.com/JKannekens/NeonShell.git/"
+    "deploy": "ng deploy --base-href=/NeonShell/"
   },
   "private": true,
   "dependencies": {
