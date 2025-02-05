@@ -8,14 +8,19 @@
     <div class="terminal-screen-wrapper">
       <div class="terminal-screen">
         <div class="terminal-lines"></div>
-        <div class="terminal-input">
-          <textarea
-            spellcheck="false"
-            [(ngModel)]="currentInput"
-            (keydown.enter)="executeCommand()"
-            autofocus
-          >
-          </textarea>
+        <div class="terminal-input terminal-text">
+          <div *ngFor="let line of outputHistory">
+            <span>{{ line }}</span>
+          </div>
+          <br />
+          <div *ngIf="!isBootingUp" style="display: flex">
+            <div class="terminal-prompt">user&#64;neon-shell:~$&nbsp;</div>
+            <textarea
+              class="terminal-text"
+              spellcheck="false"
+              autofocus
+            ></textarea>
+          </div>
         </div>
       </div>
     </div>

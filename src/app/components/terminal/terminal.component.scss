@@ -107,6 +107,13 @@ $shadow-dark: #000;
   background-repeat: repeat-y;
 }
 
+.terminal-text {
+  color: $green-glow;
+  font-family: "VT323", monospace;
+  font-size: 20px;
+  text-shadow: 0 0 2px #0aff0acc;
+}
+
 .terminal-input {
   height: 100%;
   position: relative;
@@ -114,6 +121,7 @@ $shadow-dark: #000;
   background: rgba(0, 0, 0, 0.25);
   border-radius: 0.5em;
   padding: 1em;
+  overflow: hidden;
 }
 
 .terminal-input textarea {
@@ -124,10 +132,6 @@ $shadow-dark: #000;
   outline: none;
   resize: none;
   overflow: hidden;
-  color: $green-glow;
-  font-family: "VT323", monospace;
-  font-size: 20px;
-  text-shadow: 0 0 2px #0aff0acc;
 }
 
 .terminal-bottom-panel {
@@ -137,6 +141,10 @@ $shadow-dark: #000;
   border-radius: 0 0 20px 20px;
   box-shadow: 0 0 1px 2px $metal-border;
   z-index: 1;
+}
+
+.terminal-prompt {
+  white-space: nowrap;
 }
 
 .screws {
