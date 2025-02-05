@@ -12,13 +12,14 @@
           <div *ngFor="let line of outputHistory">
             <span>{{ line }}</span>
           </div>
-          <br />
           <div *ngIf="!isBootingUp" style="display: flex">
             <div class="terminal-prompt">user&#64;neon-shell:~$&nbsp;</div>
             <textarea
               class="terminal-text"
               spellcheck="false"
               autofocus
+              (keydown.enter)="executeCommand($event)"
+              [(ngModel)]="currentInput"
             ></textarea>
           </div>
         </div>

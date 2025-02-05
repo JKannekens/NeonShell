@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './terminal.component.scss',
 })
 export class TerminalComponent {
+  readonly PROMPT = 'user@neon-shell:~$ ';
   outputHistory: string[] = [];
   currentInput: string = '';
   isBootingUp = true;
@@ -25,6 +26,7 @@ export class TerminalComponent {
       'Mounting file system...',
       'Checking network connection... [FAILED]',
       "Entering command mode. Type 'help' for a list of commands.",
+      '\n',
     ];
 
     let index = 0;
@@ -35,11 +37,39 @@ export class TerminalComponent {
         clearInterval(interval);
         this.isBootingUp = false;
       }
-    }, 1000);
+    }, 10);
   }
 
-  executeCommand() {
-    if (!this.currentInput.trim() || this.isBootingUp) return;
-    console.log(this.currentInput);
+  executeCommand(event: Event) {
+    event.preventDefault();
+    const input = this.currentInput.trim();
+    if (!input || this.isBootingUp) return;
+
+    this.outputHistory.push(this.PROMPT + input);
+    const [command, ...args] = input.split(' ');
+
+    if (this.commands[command]) {
+      this.commands[command]();
+    } else {
+      this.outputHistory.push(
+        `Command not found: "${command}". Type 'help' for available commands.`
+      );
+    }
+
+    this.currentInput = '';
+    this.outputHistory.push('\n');
+  }
+
+  private commands: { [key: string]: () => void } = {
+    help: this.showHelp.bind(this),
+    clear: this.clear.bind(this),
+  };
+
+  private showHelp() {
+    this.outputHistory.push('Available commands:\n- help\n- clear\n');
+  }
+
+  private clear() {
+    this.outputHistory = [];
   }
 }
