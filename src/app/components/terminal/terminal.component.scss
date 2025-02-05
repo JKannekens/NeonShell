@@ -1,19 +1,28 @@
 @import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
 
-$green-glow: #33ff33;
+$green-glow: #18ff62;
 $screen-border: #22aa22;
 $metal-border: #3a3a3a;
 $background-dark: #080d07;
 $shadow-dark: #000;
 
+@mixin text-glow {
+  color: $green-glow;
+  font-family: "VT323", monospace;
+  font-size: 20px;
+  text-shadow: 0 0 2px #0aff0acc;
+}
+
 .terminal {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 90vw;
+  max-width: 1400px;
 }
 
 .terminal-monitor {
-  width: 90vw;
+  width: 90%;
   height: 75vh;
   background: linear-gradient(to bottom, #1a1a1a 0%, #0d0d0d 100%);
   border: 8px solid $metal-border;
@@ -35,12 +44,9 @@ $shadow-dark: #000;
   align-items: center;
 
   &::after {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
     content: "";
+    position: absolute;
+    inset: 0;
     z-index: 60;
     opacity: 0.1;
     background: linear-gradient(
@@ -57,32 +63,28 @@ $shadow-dark: #000;
   box-shadow: 0 0 1px 2px $metal-border;
   padding: 10px;
   overflow-y: auto;
+  overflow: hidden;
   white-space: pre-wrap;
   position: relative;
 
-  &::before {
+  &::before,
+  &::after {
     content: "";
     position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  &::before {
     background: radial-gradient(
       ellipse at center,
       rgba(0, 30, 30, 0) 0%,
       rgba(0, 30, 30, 0.5) 100%
     );
     z-index: 31;
-    pointer-events: none;
   }
 
   &::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
     opacity: 0.5;
     background: radial-gradient(
       ellipse at center,
@@ -90,31 +92,44 @@ $shadow-dark: #000;
       rgba(0, 255, 119, 0) 100%
     );
     z-index: 32;
-    pointer-events: none;
+  }
+}
+
+.terminal-scanline {
+  &::before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: radial-gradient(
+      ellipse at center,
+      #00ff77 0%,
+      rgba(0, 255, 119, 0) 100%
+    );
+    opacity: 0.25;
+    z-index: 50;
+    animation: scanline 6s linear infinite;
   }
 }
 
 .terminal-lines {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   z-index: 10;
   opacity: 0.25;
   background: linear-gradient(#888 50%, #000 50%);
   background-size: 100% 4px;
   background-repeat: repeat-y;
+  animation: scanlines 1s steps(60) infinite;
+}
+
+.terminal-text,
+.terminal-input {
+  @include text-glow();
 }
 
 .terminal-text {
-  color: $green-glow;
-  font-family: "VT323", monospace;
-  font-size: 20px;
-  text-shadow: 0 0 2px #0aff0acc;
-}
-
-.terminal-input {
   height: 100%;
   position: relative;
   z-index: 50;
@@ -124,7 +139,7 @@ $shadow-dark: #000;
   overflow: hidden;
 }
 
-.terminal-input textarea {
+.terminal-text textarea {
   width: 100%;
   height: 100%;
   background: transparent;
@@ -170,5 +185,17 @@ $shadow-dark: #000;
   &.screw4 {
     bottom: 10px;
     right: 10px;
+  }
+}
+
+@keyframes scanline {
+  0% {
+    transform: translate3d(0, 200000%, 0);
+  }
+}
+
+@keyframes scanlines {
+  0% {
+    background-position: 0 50%;
   }
 }
