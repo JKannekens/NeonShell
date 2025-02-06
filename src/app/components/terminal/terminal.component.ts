@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FileSystemNode, terminalFileSystem } from './fileSystem';
+import { TerminalService } from '../../services/terminal.service';
 
 @Component({
   selector: 'app-terminal',
@@ -17,6 +17,8 @@ export class TerminalComponent implements OnInit {
   currentInput = '';
   isBootingUp = true;
 
+  constructor(private terminalService: TerminalService) {}
+
   private readonly bootMessages = [
     'Neon Shell OS v1.0',
     'Initializing system...',
@@ -26,12 +28,6 @@ export class TerminalComponent implements OnInit {
     "Entering command mode. Type 'help' for a list of commands.",
     '\n',
   ];
-
-  private readonly commands: Record<string, () => void> = {
-    help: this.showHelp.bind(this),
-    clear: this.clear.bind(this),
-    ls: this.listDirectories.bind(this),
-  };
 
   ngOnInit(): void {
     this.fakeBootSequence();
@@ -49,52 +45,20 @@ export class TerminalComponent implements OnInit {
     }, 10);
   }
 
-  executeCommand(event: Event): void {
+  handleEnterKeyPressed(event: Event): void {
     event.preventDefault();
-    if (this.isBootingUp) return;
+    if (this.isBootingUp || !this.currentInput) return;
 
-    const input = this.currentInput.trim();
-    if (!input) return;
+    this.outputHistory.push(this.PROMPT + this.currentInput);
+    const output = this.terminalService.executeCommand(this.currentInput);
 
-    this.outputHistory.push(this.PROMPT + input);
-    const [command] = input.split(' ');
-
-    if (this.commands[command]) {
-      this.commands[command]();
+    if (!output) {
+      this.outputHistory = [];
     } else {
-      this.outputHistory.push(
-        `Command not found: "${command}". Type 'help' for available commands.`
-      );
+      this.outputHistory.push(output);
     }
 
     this.currentInput = '';
     this.outputHistory.push('\n');
-  }
-
-  private showHelp(): void {
-    this.outputHistory.push('Available commands:\n- help\n- clear\n- ls\n');
-  }
-
-  private clear(): void {
-    this.outputHistory = [];
-  }
-
-  private listDirectories(): void {
-    const folder = this.getCurrentDirectory();
-    this.outputHistory.push(
-      folder.children
-        ? Object.keys(folder.children).join('  ')
-        : 'No directories found.'
-    );
-  }
-
-  private getCurrentDirectory(): FileSystemNode {
-    return this.currentPath.reduce<FileSystemNode>((dir, sub) => {
-      if (sub === 'root') return terminalFileSystem.root;
-      if (dir.type === 'folder' && dir.children?.[sub]) {
-        return dir.children[sub];
-      }
-      throw new Error(`Path not found: ${this.currentPath.join('/')}`);
-    }, terminalFileSystem.root);
   }
 }

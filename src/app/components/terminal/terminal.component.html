@@ -20,7 +20,7 @@
               spellcheck="false"
               autofocus
               onblur="this.focus();"
-              (keydown.enter)="executeCommand($event)"
+              (keydown.enter)="handleEnterKeyPressed($event)"
               [(ngModel)]="currentInput"
             ></textarea>
           </div>
