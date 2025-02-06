@@ -49,11 +49,19 @@ export class FileSystemService {
 
   public changeDirectory(path: string): string {
     const currentFolder = this.getCurrentDirectory();
-    if (currentFolder.children?.[path]?.type === 'folder') {
-      this.currentPath.push(path);
+    if (path === '../' || path === '..') {
+      if (this.currentPath.length > 1) {
+        this.currentPath.pop();
+      }
       return '';
     }
-    return `cd: no such file or directory: ${path}`;
+
+    if (currentFolder.children?.[path]?.type !== 'folder') {
+      return `cd: no such file or directory: ${path}`;
+    }
+
+    this.currentPath.push(path);
+    return '';
   }
 
   public listDirectories(): string {
@@ -69,6 +77,7 @@ export class FileSystemService {
       if (dir.type === 'folder' && dir.children?.[sub]) {
         return dir.children[sub];
       }
+
       throw new Error(`Path not found: ${this.currentPath.join('/')}`);
     }, this.terminalFileSystem.root);
   }

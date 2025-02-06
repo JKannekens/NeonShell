@@ -64,6 +64,6 @@ export class TerminalComponent implements OnInit {
         clearInterval(interval);
         this.isBootingUp = false;
       }
-    }, 10);
+    }, 500);
   }
 }
