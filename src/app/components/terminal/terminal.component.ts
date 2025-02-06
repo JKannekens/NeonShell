@@ -11,8 +11,7 @@ import { TerminalService } from '../../services/terminal.service';
   styleUrl: './terminal.component.scss',
 })
 export class TerminalComponent implements OnInit {
-  readonly PROMPT = 'user@neon-shell:~$ ';
-  currentPath: string[] = ['root'];
+  prompt: string = '';
   outputHistory: string[] = [];
   currentInput = '';
   isBootingUp = true;
@@ -31,6 +30,29 @@ export class TerminalComponent implements OnInit {
 
   ngOnInit(): void {
     this.fakeBootSequence();
+    this.updatePrompt();
+  }
+
+  updatePrompt() {
+    this.prompt = `user@neon-shell:${this.terminalService.getCurrentPath()}$`;
+  }
+
+  handleEnterKeyPressed(event: Event): void {
+    event.preventDefault();
+    if (this.isBootingUp || !this.currentInput) return;
+
+    this.outputHistory.push(this.prompt + ' ' + this.currentInput);
+    const output = this.terminalService.executeCommand(this.currentInput);
+
+    if (output === null) {
+      this.outputHistory = [];
+    } else {
+      this.outputHistory.push(output);
+    }
+
+    this.currentInput = '';
+    this.outputHistory.push('\n');
+    this.updatePrompt();
   }
 
   private fakeBootSequence(): void {
@@ -43,22 +65,5 @@ export class TerminalComponent implements OnInit {
         this.isBootingUp = false;
       }
     }, 10);
-  }
-
-  handleEnterKeyPressed(event: Event): void {
-    event.preventDefault();
-    if (this.isBootingUp || !this.currentInput) return;
-
-    this.outputHistory.push(this.PROMPT + this.currentInput);
-    const output = this.terminalService.executeCommand(this.currentInput);
-
-    if (!output) {
-      this.outputHistory = [];
-    } else {
-      this.outputHistory.push(output);
-    }
-
-    this.currentInput = '';
-    this.outputHistory.push('\n');
   }
 }

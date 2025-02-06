@@ -14,7 +14,7 @@
             <span class="terminal-output">{{ line }}</span>
           </div>
           <div *ngIf="!isBootingUp" style="display: flex">
-            <div class="terminal-prompt">user&#64;neon-shell:~$&nbsp;</div>
+            <div class="terminal-prompt">{{ prompt }}<span>&nbsp;</span></div>
             <textarea
               class="terminal-input"
               spellcheck="false"

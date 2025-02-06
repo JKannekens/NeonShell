@@ -43,6 +43,19 @@ export class FileSystemService {
     },
   };
 
+  public getCurrentPath(): string {
+    return '/' + this.currentPath.slice(1).join('/') || '~';
+  }
+
+  public changeDirectory(path: string): string {
+    const currentFolder = this.getCurrentDirectory();
+    if (currentFolder.children?.[path]?.type === 'folder') {
+      this.currentPath.push(path);
+      return '';
+    }
+    return `cd: no such file or directory: ${path}`;
+  }
+
   public listDirectories(): string {
     const folder = this.getCurrentDirectory();
     return folder.children
