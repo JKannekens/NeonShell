@@ -71,6 +71,15 @@ export class FileSystemService {
       : 'No directories found.';
   }
 
+  public readFile(fileName: string): string {
+    const file = this.getCurrentDirectory().children?.[fileName];
+    if (file?.type !== 'file') {
+      return `cat: ${fileName}: No such file`;
+    }
+
+    return file.content || '';
+  }
+
   private getCurrentDirectory(): FileSystemNode {
     return this.currentPath.reduce<FileSystemNode>((dir, sub) => {
       if (sub === 'root') return this.terminalFileSystem.root;

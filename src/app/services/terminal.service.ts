@@ -15,6 +15,7 @@ export class TerminalService {
     clear: this.clear.bind(this),
     ls: this.listDirectories.bind(this),
     cd: this.changeDirectory.bind(this),
+    cat: this.readFile.bind(this),
   };
 
   executeCommand(input: string): string | null {
@@ -44,6 +45,12 @@ export class TerminalService {
   }
 
   private changeDirectory(path: string): string {
+    if (!path) return 'Usage: cd <folder_name>';
     return this.fileSystemService.changeDirectory(path);
+  }
+
+  private readFile(fileName: string): string {
+    if (!fileName) return 'Usage: cat <file_name>';
+    return this.fileSystemService.readFile(fileName);
   }
 }
